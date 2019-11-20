@@ -1,86 +1,89 @@
 package com.nchungdev.musicgo
 
-import android.media.MediaPlayer
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.nchungdev.musicgo.music_player.MusicPlayer
-import com.nchungdev.musicgo.music_player.MusicPlayerListener
-import com.nchungdev.musicgo.music_player.MusicPlayerState
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.nchungdev.musicgo.music_player.PlayerState
 import com.nchungdev.musicgo.util.PermissionUtils
 import kotlinx.android.synthetic.main.activity_music_main.*
 
-class MusicMainActivity : AppCompatActivity(), MusicPlayerListener {
-    override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
-        Log.e("Player", "onError $what")
-        return false
-    }
-
-    override fun onPrepared(mp: MediaPlayer?) {
-        Log.e("Player", "Prepared $mp")
-        mp?.start()
-        viewModel.musicPlayerState.value = MusicPlayerState.PLAY
-    }
-
-    override fun onBufferingUpdate(mp: MediaPlayer?, percent: Int) {
-    }
+class MusicMainActivity : AppCompatActivity() {
 
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(MusicMainViewModel::class.java)
     }
-    private val musicPlayer by lazy { MusicPlayer(this@MusicMainActivity) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_music_main)
         setSupportActionBar(findViewById(R.id.toolbar))
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
-        val navController = findNavController(R.id.nav_host_fragment)
-        val appBarConfiguration = AppBarConfiguration(
+        setupNavigationUI(
             setOf(
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
             )
         )
-
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
         PermissionUtils.requestPermission(
             this,
             100,
             android.Manifest.permission.READ_EXTERNAL_STORAGE
         )
-        viewModel.musicPlayerState.observe(this, Observer {
-            mini_player.isVisible = it.isPlayerVisible()
-            if (it == MusicPlayerState.PAUSE) {
-                mini_player.pause()
-                musicPlayer.pause()
-            } else {
-                mini_player.playOrResume()
-                musicPlayer.start()
+        viewModel.playerState.observe(this, Observer {
+            when (it) {
+                PlayerState.PAUSE -> {
+                    mini_player.pause()
+                    mini_player.isVisible = true
+                }
+                PlayerState.PLAY -> {
+                    mini_player.play()
+                    mini_player.isVisible = true
+                }
+                PlayerState.STOP -> {
+                    mini_player.isVisible = false
+                }
+                PlayerState.RESUME -> {
+                    mini_player.play()
+                    mini_player.isVisible = true
+                }
+                else -> Unit
             }
         })
 
         viewModel.currentSong.observe(this, Observer {
             val song = it ?: return@Observer
             mini_player.setSong(song)
-//            startActivity(Intent(Intent.ACTION_VIEW).apply { data  = song.path })
-            musicPlayer.reset()
-            musicPlayer.setDataSource(this@MusicMainActivity, song.path)
-            musicPlayer.prepareAsync()
+            viewModel.playSong(song)
         })
 
-        mini_player.setPlayOrPauseOnClickListener {
-            viewModel.musicPlayerState.value =
-                if (musicPlayer.isPlaying) MusicPlayerState.PAUSE
-                else MusicPlayerState.PLAY
+        viewModel.currentPosInPlaylist.observe(this, Observer {
+
+        })
+
+        mini_player.setTogglePlayOnClickListener {
+            viewModel.togglePlay()
         }
+
+        mini_player.setOnNextClickListener {
+            viewModel.nextSong()
+        }
+
+        LocalBroadcastManager.getInstance(this)
+            .registerReceiver(
+                object : BroadcastReceiver() {
+                    override fun onReceive(context: Context?, intent: Intent?) {
+                        intent ?: return
+                        if (intent.action == "$packageName.BROADCAST") {
+                            intent.getStringExtra("action")
+                        }
+                    }
+                },
+                IntentFilter("$packageName.BROADCAST")
+            )
     }
 }

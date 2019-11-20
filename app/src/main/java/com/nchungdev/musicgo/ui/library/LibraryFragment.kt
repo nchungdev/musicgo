@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nchungdev.musicgo.MusicMainViewModel
 import com.nchungdev.musicgo.R
-import com.nchungdev.musicgo.music_player.MusicPlayerState
 
 class LibraryFragment : Fragment() {
 
@@ -36,7 +35,6 @@ class LibraryFragment : Fragment() {
         val musicMainViewModel = ViewModelProviders.of(activity).get(MusicMainViewModel::class.java)
         libraryViewModel.songList.observe(this, Observer { songList ->
             recyclerView.adapter = LibraryAdapter(songList) {
-                musicMainViewModel.musicPlayerState.value = MusicPlayerState.STOP
                 musicMainViewModel.currentSong.value = it
             }
         })

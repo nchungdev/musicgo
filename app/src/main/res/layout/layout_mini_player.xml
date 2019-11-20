@@ -35,14 +35,14 @@
             android:textColor="@android:color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btnPauseOrPlay"
+            app:layout_constraintEnd_toStartOf="@id/btnPlay"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toEndOf="@id/imageCover"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Memories" />
 
         <ImageButton
-            android:id="@+id/btnPauseOrPlay"
+            android:id="@+id/btnPlay"
             android:layout_width="48dp"
             android:layout_height="48dp"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -25,7 +25,7 @@ class MiniPlayerView @JvmOverloads constructor(
         View.inflate(context, R.layout.layout_mini_player, this)
         textTitle = findViewById(R.id.textTitle)
         imageCover = findViewById(R.id.imageCover)
-        btnPlayOrPause = findViewById(R.id.btnPauseOrPlay)
+        btnPlayOrPause = findViewById(R.id.btnPlay)
         btnSkipNext = findViewById(R.id.btnNext)
     }
 
@@ -38,11 +38,15 @@ class MiniPlayerView @JvmOverloads constructor(
         btnPlayOrPause.setImageResource(R.drawable.ic_play_arrow_24dp)
     }
 
-    fun playOrResume() {
+    fun play() {
         btnPlayOrPause.setImageResource(R.drawable.ic_pause_24dp)
     }
 
-    fun setPlayOrPauseOnClickListener(onClick: () -> Unit) {
+    fun setTogglePlayOnClickListener(onClick: () -> Unit) {
         btnPlayOrPause.setOnClickListener { onClick() }
+    }
+
+    fun setOnNextClickListener(onClick: () -> Unit) {
+        btnSkipNext.setOnClickListener { onClick() }
     }
 }

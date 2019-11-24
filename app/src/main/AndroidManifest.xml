@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".MusicApplication"
@@ -20,8 +21,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        <activity
+            android:name=".ui.now_playing.MainPlayingActivity"
+            android:label="@string/title_activity_now_playing"
+            android:theme="@style/AppTheme.Main" />
+
         <service
-            android:name=".music_player.PlayerService"
+            android:name=".service.service.MusicService"
             android:enabled="true"
             android:exported="true" />
 

@@ -8,10 +8,10 @@ import com.nchungdev.musicgo.repository.Song
 
 class LibraryAdapter(
     private val songs: List<Song>,
-    private val onItemClickListener: (Song) -> Unit
+    private val onItemClickListener: (Int) -> Unit
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, @ViewType viewType: Int) =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         when (viewType) {
             ViewType.HEADER -> {
                 HeaderViewHolder(
@@ -40,7 +40,6 @@ class LibraryAdapter(
 
     override fun getItemCount() = songs.size + 1
 
-    @ViewType
     override fun getItemViewType(position: Int) =
         if (position == 0) ViewType.HEADER else ViewType.SONG
 

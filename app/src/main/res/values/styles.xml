@@ -11,5 +11,39 @@
     <style name="AppTheme.Main" parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <style name="ImageButtonStyle">
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:tint">@android:color/black</item>
+    </style>
+
+    <style name="ImageButtonStyle.Big" parent="ImageButtonStyle">
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="TextViewStyle">
+        <item name="android:textColor">#2e2e2e</item>
+    </style>
+
+    <style name="TextViewStyle.Accent">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="cusToolbarNavigationButtonStyle" parent="@style/Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+    </style>
+
+    <style name="cusToolbarStyle" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="titleMargin">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="android:contentInsetLeft">0dp</item>
     </style>
 </resources>

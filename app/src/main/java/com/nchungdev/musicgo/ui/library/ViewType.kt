@@ -2,7 +2,7 @@ package com.nchungdev.musicgo.ui.library
 
 import androidx.annotation.IntDef
 
-@IntDef(ViewType.HEADER, ViewType.SONG)
+@IntDef(ViewType.SONG, ViewType.HEADER)
 @Retention(AnnotationRetention.SOURCE)
 annotation class ViewType {
 

@@ -5,9 +5,9 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Song(
-    val title: String,
-    val album: String,
-    val artist: String,
+    val title: String = "",
+    val album: String = "",
+    val artist: String = "",
     val cover: Uri = Uri.EMPTY,
     val data: Uri = Uri.EMPTY
 ) : Parcelable {
@@ -32,6 +32,8 @@ data class Song(
     override fun describeContents() = 0
 
     companion object CREATOR : Parcelable.Creator<Song> {
+        val EMPTY_SONG = Song()
+
         override fun createFromParcel(parcel: Parcel) = Song(parcel)
 
         override fun newArray(size: Int) = arrayOfNulls<Song?>(size)

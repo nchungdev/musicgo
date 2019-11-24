@@ -1,20 +1,19 @@
 package com.nchungdev.musicgo
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.nchungdev.musicgo.music_player.PlayerState
-import com.nchungdev.musicgo.util.PermissionUtils
+import com.nchungdev.musicgo.custom.PlayControllerView
+import com.nchungdev.musicgo.permission.PermissionUtils
+import com.nchungdev.musicgo.ui.now_playing.MainPlayingActivity
+import com.nchungdev.musicgo.util.setupNavigationUI
 import kotlinx.android.synthetic.main.activity_music_main.*
 
-class MusicMainActivity : AppCompatActivity() {
+class MusicMainActivity : AppCompatActivity(), PlayControllerView.OnPlayerController {
 
     private val viewModel by lazy {
         ViewModelProviders.of(this).get(MusicMainViewModel::class.java)
@@ -32,58 +31,81 @@ class MusicMainActivity : AppCompatActivity() {
         PermissionUtils.requestPermission(
             this,
             100,
-            android.Manifest.permission.READ_EXTERNAL_STORAGE
+            listOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         )
-        viewModel.playerState.observe(this, Observer {
-            when (it) {
-                PlayerState.PAUSE -> {
-                    mini_player.pause()
-                    mini_player.isVisible = true
-                }
-                PlayerState.PLAY -> {
-                    mini_player.play()
-                    mini_player.isVisible = true
-                }
-                PlayerState.STOP -> {
-                    mini_player.isVisible = false
-                }
-                PlayerState.RESUME -> {
-                    mini_player.play()
-                    mini_player.isVisible = true
-                }
-                else -> Unit
+        mini_player.setOnControllerListener(this)
+
+        viewModel.connectService()
+
+        viewModel.serviceConnectionState.observe(this, Observer {
+            if (it == true) {
+                viewModel.loadPlaylist()
+                viewModel.registerReceiver()
             }
         })
-
-        viewModel.currentSong.observe(this, Observer {
-            val song = it ?: return@Observer
-            mini_player.setSong(song)
-            viewModel.playSong(song)
+        viewModel.currentPlaylist.observe(this, Observer {
+            viewModel.updatePlaylistSong(it)
         })
 
-        viewModel.currentPosInPlaylist.observe(this, Observer {
-
+        viewModel.currentPosition.observe(this, Observer {
+            val position = it ?: return@Observer
+            viewModel.playSongAt(position)
+            val playlist = viewModel.currentPlaylist.value ?: return@Observer
+            mini_player.setSong(playlist[position])
         })
 
-        mini_player.setTogglePlayOnClickListener {
-            viewModel.togglePlay()
-        }
+        viewModel.buttonPlayPauseIcon.observe(this, Observer {
+            val icon = it ?: return@Observer
+            mini_player.setPlayButtonIcon(icon)
+        })
+        viewModel.miniPlayerVisibility.observe(this, Observer {
+            mini_player.isVisible = it ?: false
+        })
+        viewModel.nowPlayingVisibility.observe(this, Observer {
+            val isVisible = it ?: return@Observer
+            val currentPosition = viewModel.currentPosition.value ?: return@Observer
+            val currentPlaylist = viewModel.currentPlaylist.value ?: return@Observer
 
-        mini_player.setOnNextClickListener {
-            viewModel.nextSong()
-        }
+            if (isVisible) {
+                MainPlayingActivity.start(
+                    this, ArrayList(currentPlaylist), currentPosition,
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        this,
+                        mini_player as View,
+                        "playController"
+                    )
+                )
+            }
+        })
+    }
 
-        LocalBroadcastManager.getInstance(this)
-            .registerReceiver(
-                object : BroadcastReceiver() {
-                    override fun onReceive(context: Context?, intent: Intent?) {
-                        intent ?: return
-                        if (intent.action == "$packageName.BROADCAST") {
-                            intent.getStringExtra("action")
-                        }
-                    }
-                },
-                IntentFilter("$packageName.BROADCAST")
-            )
+    override fun onExpand() {
+        viewModel.nowPlayingVisibility.postValue(true)
+    }
+
+    override fun onNext() {
+        viewModel.playNextSong()
+    }
+
+    override fun onPrev() {
+        viewModel.playPrevSong()
+    }
+
+    override fun onTogglePause() {
+        viewModel.togglePlay()
+    }
+
+    override fun onDestroy() {
+        viewModel.unregisterReceiver()
+        super.onDestroy()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        PermissionUtils.onRequestPermissionResult(requestCode, permissions, grantResults)
     }
 }

@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:orientation="horizontal"
-    android:paddingStart="8dp"
-    android:paddingTop="4dp"
-    android:paddingEnd="8dp"
-    android:paddingBottom="4dp">
+    android:layout_height="64dp"
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/textTitle"
+        style="@style/TextViewStyle.Accent"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginStart="4dp"
@@ -20,6 +17,7 @@
 
     <TextView
         android:id="@+id/textArtist"
+        style="@style/TextViewStyle.Accent"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

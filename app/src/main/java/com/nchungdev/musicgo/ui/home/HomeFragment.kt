@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.nchungdev.musicgo.MusicMainViewModel
 import com.nchungdev.musicgo.R
 
 class HomeFragment : Fragment() {
@@ -27,5 +29,14 @@ class HomeFragment : Fragment() {
             textView.text = it
         })
         return root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val activity = activity ?: return
+        val musicMainViewModel = ViewModelProviders.of(activity).get(MusicMainViewModel::class.java)
+        musicMainViewModel.serviceConnectionState.observe(activity, Observer {
+            Toast.makeText(activity, "Connected", Toast.LENGTH_SHORT).show()
+        })
     }
 }

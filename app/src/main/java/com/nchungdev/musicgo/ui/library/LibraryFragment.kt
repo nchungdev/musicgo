@@ -32,10 +32,15 @@ class LibraryFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         val activity = activity ?: return
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        val musicMainViewModel = ViewModelProviders.of(activity).get(MusicMainViewModel::class.java)
+        val musicMainViewModel =
+            ViewModelProviders.of(activity).get(MusicMainViewModel::class.java).apply {
+                currentPlaylist.observe(activity, Observer {
+                    libraryViewModel.songList.value = it
+                })
+            }
         libraryViewModel.songList.observe(this, Observer { songList ->
             recyclerView.adapter = LibraryAdapter(songList) {
-                musicMainViewModel.currentSong.value = it
+                musicMainViewModel.currentPosition.value = it
             }
         })
     }

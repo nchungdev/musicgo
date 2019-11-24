@@ -12,12 +12,12 @@ class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val textTitle = itemView.findViewById<TextView>(R.id.textTitle)
     private val textArtist = itemView.findViewById<TextView>(R.id.textArtist)
 
-    fun bindData(song: Song, onItemClickListener: (Song) -> Unit) {
+    fun bindData(song: Song, onItemClickListener: (Int) -> Unit) {
         textArtist.text = song.artist
         textTitle.text = song.title
         imageCover.setImageURI(song.cover)
         itemView.setOnClickListener {
-            onItemClickListener(song)
+            onItemClickListener(adapterPosition - 1)
         }
     }
 }

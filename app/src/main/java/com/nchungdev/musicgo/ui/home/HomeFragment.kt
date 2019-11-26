@@ -36,7 +36,7 @@ class HomeFragment : Fragment() {
         val activity = activity ?: return
         val musicMainViewModel = ViewModelProviders.of(activity).get(MusicMainViewModel::class.java)
         musicMainViewModel.serviceConnectionState.observe(activity, Observer {
-            Toast.makeText(activity, "Connected", Toast.LENGTH_SHORT).show()
+
         })
     }
 }

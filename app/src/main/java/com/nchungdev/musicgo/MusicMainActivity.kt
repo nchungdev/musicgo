@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
+import androidx.core.util.Pair
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -12,6 +13,7 @@ import com.nchungdev.musicgo.permission.PermissionUtils
 import com.nchungdev.musicgo.ui.now_playing.MainPlayingActivity
 import com.nchungdev.musicgo.util.setupNavigationUI
 import kotlinx.android.synthetic.main.activity_music_main.*
+import kotlinx.android.synthetic.main.layout_play_controller.view.*
 
 class MusicMainActivity : AppCompatActivity(), PlayControllerView.OnPlayerController {
 
@@ -67,13 +69,17 @@ class MusicMainActivity : AppCompatActivity(), PlayControllerView.OnPlayerContro
             val currentPlaylist = viewModel.currentPlaylist.value ?: return@Observer
 
             if (isVisible) {
-                MainPlayingActivity.start(
-                    this, ArrayList(currentPlaylist), currentPosition,
+                val animation =
                     ActivityOptionsCompat.makeSceneTransitionAnimation(
                         this,
-                        mini_player as View,
-                        "playController"
+                        Pair(mini_player.imageCover as View, "imageCover"),
+                        Pair(mini_player.controller as View, "controller")
                     )
+                MainPlayingActivity.start(
+                    this,
+                    ArrayList(currentPlaylist),
+                    currentPosition,
+                    animation
                 )
             }
         })

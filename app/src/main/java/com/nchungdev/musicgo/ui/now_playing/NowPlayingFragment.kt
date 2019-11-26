@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.nchungdev.musicgo.R
 import com.nchungdev.musicgo.custom.BigPlayControllerView
-import kotlinx.android.synthetic.main.now_playing_fragment.*
+import kotlinx.android.synthetic.main.fragment_now_playing.*
 
 class NowPlayingFragment : Fragment(), BigPlayControllerView.OnControllerListener {
 
@@ -23,7 +23,7 @@ class NowPlayingFragment : Fragment(), BigPlayControllerView.OnControllerListene
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.now_playing_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_now_playing, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

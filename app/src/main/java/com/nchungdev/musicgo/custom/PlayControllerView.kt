@@ -7,7 +7,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
-import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.nchungdev.musicgo.R
 import com.nchungdev.musicgo.repository.Song
 import kotlinx.android.synthetic.main.layout_play_controller.view.*
@@ -16,7 +16,7 @@ class PlayControllerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : CardView(context, attrs, defStyleAttr) {
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     private var textTitle: TextView
     private var imageCover: ImageView

@@ -21,6 +21,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        <receiver android:name=".service.notification.NotificationReceiver">
+            <intent-filter>
+                <action android:name="com.nchungdev.musicgo.DELETE_NOTIFICATION" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".ui.now_playing.MainPlayingActivity"
             android:label="@string/title_activity_now_playing"
@@ -42,6 +48,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:theme="@style/AppTheme.Transparent" android:name=".anr_check.AnrSupervisedActivity" />
     </application>
 
 </manifest>

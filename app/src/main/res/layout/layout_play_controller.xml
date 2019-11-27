@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bgClick"
-    android:background="@color/colorBackgroundNowPlaying"
+    android:background="@drawable/bg_play_controller"
     android:clickable="true"
     android:focusable="true"
     android:layout_height="64dp"
@@ -12,7 +11,8 @@
     android:paddingBottom="8dp"
     android:paddingEnd="16dp"
     android:paddingStart="16dp"
-    android:paddingTop="8dp">
+    android:paddingTop="8dp"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
     <ImageView
         android:id="@+id/imageCover"
@@ -88,4 +88,4 @@
             app:srcCompat="@drawable/ic_skip_next_24dp"
             tools:ignore="ContentDescription" />
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</merge>

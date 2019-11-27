@@ -58,7 +58,9 @@ class MusicMainViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun loadPlaylist() {
-        currentPlaylist.postValue(SongScanner(getApplication()))
+        Thread(Runnable {
+            currentPlaylist.postValue(SongScanner(getApplication()))
+        }).start()
     }
 
     fun connectService() {

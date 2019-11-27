@@ -10,7 +10,7 @@ import androidx.annotation.DrawableRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.nchungdev.musicgo.R
 import com.nchungdev.musicgo.repository.Song
-import kotlinx.android.synthetic.main.layout_play_controller.view.*
+import com.nchungdev.musicgo.util.Uri2Bitmap
 
 class PlayControllerView @JvmOverloads constructor(
     context: Context,
@@ -35,7 +35,9 @@ class PlayControllerView @JvmOverloads constructor(
 
     fun setSong(song: Song) {
         textTitle.text = song.title
-        imageCover.setImageURI(song.cover)
+        Uri2Bitmap(context, song.cover, R.drawable.ic_play_24dp) {
+            imageCover.setImageBitmap(it)
+        }
     }
 
     fun setPlayButtonIcon(@DrawableRes drawableId: Int) {
@@ -43,7 +45,7 @@ class PlayControllerView @JvmOverloads constructor(
     }
 
     fun setOnControllerListener(controller: OnPlayerController) {
-        bgClick.setOnClickListener { controller.onExpand() }
+        setOnClickListener { controller.onExpand() }
         btnPlayOrPause.setOnClickListener { controller.onTogglePause() }
         btnSkipNext.setOnClickListener { controller.onNext() }
         btnPrev.setOnClickListener { controller.onPrev() }

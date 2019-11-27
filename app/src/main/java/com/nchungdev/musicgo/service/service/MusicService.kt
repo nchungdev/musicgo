@@ -10,7 +10,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.nchungdev.musicgo.repository.Song
 import com.nchungdev.musicgo.service.What
 import com.nchungdev.musicgo.service.action.MusicConstant
-import com.nchungdev.musicgo.service.db.TrackPreferences
 import com.nchungdev.musicgo.service.notification.NotificationPlayer
 import com.nchungdev.musicgo.service.notification.NotificationPlayerImpl
 import com.nchungdev.musicgo.service.playback.GoPlayer
@@ -26,9 +25,9 @@ class MusicService : Service(), MusicServiceData, MusicServicePlayback,
      * Lateinit variable
      */
     private lateinit var playerBinder: GoPlayerBinder
-    private lateinit var preferences: TrackPreferences
+    //    private lateinit var preferences: TrackPreferences
     private lateinit var notificationPlayer: NotificationPlayer
-    private lateinit var musicPlayerHandlerThread: HandlerThread
+    private lateinit var handlerThread: HandlerThread
     private lateinit var playerHandler: PlayerHandler
 
     /**
@@ -53,11 +52,11 @@ class MusicService : Service(), MusicServiceData, MusicServicePlayback,
         super.onCreate()
         playerBinder = GoPlayer(this)
         playerBinder.setCallback(this)
-        preferences = TrackPreferences(this)
+//        preferences = TrackPreferences(this)
         notificationPlayer = NotificationPlayerImpl(this)
-        musicPlayerHandlerThread = HandlerThread("PlaybackHandler")
-        musicPlayerHandlerThread.start()
-        playerHandler = PlayerHandler(this, musicPlayerHandlerThread.looper)
+        handlerThread = HandlerThread("PlaybackHandler")
+        handlerThread.start()
+        playerHandler = PlayerHandler(this, handlerThread.looper)
     }
 
     override fun onBind(intent: Intent) = GoBinder()
@@ -70,8 +69,11 @@ class MusicService : Service(), MusicServiceData, MusicServicePlayback,
                 if (isPlaying()) pause()
                 else play()
             }
-            MusicConstant.ACTION_TOGGLE_EXPANDED -> {
-                toggleExpandNotification()
+            MusicConstant.ACTION_STOP -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    stopForeground(true)
+                }
+                stopSelf()
             }
         }
         return START_NOT_STICKY
@@ -208,15 +210,11 @@ class MusicService : Service(), MusicServiceData, MusicServicePlayback,
     }
 
     private fun savePositionInTrack() {
-        preferences.savePositionInTrack(getSongProgressMillis())
+//        preferences.savePositionInTrack(getSongProgressMillis())
     }
 
     private fun updateNotification() {
         notificationPlayer.update()
-    }
-
-    private fun toggleExpandNotification() {
-        notificationPlayer.toggleExpand()
     }
 
     fun getAudioManager(): AudioManager {

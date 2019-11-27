@@ -18,6 +18,6 @@ object MusicConstant {
 
     const val META_CHANGED = "$PACKAGE_NAME.metachanged"
 
-    const val ACTION_TOGGLE_EXPANDED: String = "$PACKAGE_NAME.toggle_expanded"
+    const val START_SERVICE = "$PACKAGE_NAME.start_service"
 
 }

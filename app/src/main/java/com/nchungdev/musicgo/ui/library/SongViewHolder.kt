@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.nchungdev.musicgo.R
 import com.nchungdev.musicgo.repository.Song
+import com.nchungdev.musicgo.util.Uri2Bitmap
 
 class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val imageCover = itemView.findViewById<ImageView>(R.id.imageCover)
@@ -15,7 +16,9 @@ class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bindData(song: Song, onItemClickListener: (Int) -> Unit) {
         textArtist.text = song.artist
         textTitle.text = song.title
-        imageCover.setImageURI(song.cover)
+        Uri2Bitmap(itemView.context, song.cover, R.drawable.ic_play_24dp) {
+            imageCover.setImageBitmap(it)
+        }
         itemView.setOnClickListener {
             onItemClickListener(adapterPosition - 1)
         }
